@@ -1,0 +1,30 @@
+# Menyalakan semua service hadoop
+start-all.cmd
+
+# Membuat direktori HDFS
+hadoop fs -mkdir -p /gutenberg/hadoop/input
+hadoop fs -mkdir -p /gutenberg/hadoop/output
+
+# Menjalankan skrip python untuk text preprocessing
+python preprocess.py
+
+# Menggunggah file hasil preprocess ke hadoop
+hdfs dfs -put "D:\##~~ University stuff\2025\abd\gutenberg\gutenberg_agg_cleaned.txt" /gutenberg/hadoop/input
+
+# Menjalankan MapReduce
+hadoop jar C:\hadoop\share\hadoop\mapreduce\hadoop-mapreduce-examples-3.2.4.jar wordcount /gutenberg/hadoop/input/gutenberg_agg_cleaned.txt /gutenberg/hadoop/output_mapred
+
+# Membuat salinan
+hdfs dfs -cp /gutenberg/hadoop/output_mapred/part-r-00000 /gutenberg/hadoop/output_mapred/part-r-00000_backup
+
+# Mengubah file original menjadi txt
+hdfs dfs -mv /gutenberg/hadoop/output_mapred/part-r-00000 /gutenberg/hadoop/output_mapred/part-r-00000.txt
+
+# Menjalankan kode analisis deskriptif menggunakan pipelining
+hdfs dfs -cat /gutenberg/hadoop/output_mapred/part-r-00000.txt | python "D:\##~~ University stuff\2025\abd\stat_desc.py"
+
+# Menjalankan kode analisis sentimen
+hdfs dfs -cat /gutenberg/hadoop/output_mapred/part-r-00000.txt | python "D:\##~~ University stuff\2025\abd\sentiment_analysis.py"
+
+# Memberhentikan seluruh hadoop service
+stop-all.cmd

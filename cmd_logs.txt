@@ -1,0 +1,184 @@
+C:\hadoop\sbin>start-all.cmd
+This script is Deprecated. Instead use start-dfs.cmd and start-yarn.cmd
+starting yarn daemons
+
+C:\hadoop\sbin>hadoop fs -mkdir -p /gutenberg/hadoop/input
+
+C:\hadoop\sbin>hadoop fs -mkdir -p /gutenberg/hadoop/output
+
+D:\##~~ University stuff\2025\abd>python preprocess.py
+Menggabungkan file Gutenberg: 100%|█████████████████████████████████████████████████████████████████| 3036/3036 [07:12<00:00,  7.02it/s]
+Selesai. 3036 file digabung ke: gutenberg_agg_cleaned.txt
+
+C:\hadoop\sbin>hdfs dfs -put "D:\##~~ University stuff\2025\abd\gutenberg_agg_cleaned.txt" /gutenberg/hadoop/input
+
+C:\hadoop\sbin>hadoop jar C:\hadoop\share\hadoop\mapreduce\hadoop-mapreduce-examples-3.2.4.jar wordcount /gutenberg/hadoop/input/gutenberg_agg_cleaned.txt /gutenberg/hadoop/output_mapred
+2025-10-07 08:26:05,679 INFO client.RMProxy: Connecting to ResourceManager at localhost/127.0.0.1:8032
+2025-10-07 08:26:06,007 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/mlphr001/.staging/job_1759799410260_0002
+2025-10-07 08:26:06,126 INFO input.FileInputFormat: Total input files to process : 1
+2025-10-07 08:26:06,177 INFO mapreduce.JobSubmitter: number of splits:6
+2025-10-07 08:26:06,271 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1759799410260_0002
+2025-10-07 08:26:06,271 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-10-07 08:26:06,377 INFO conf.Configuration: resource-types.xml not found
+2025-10-07 08:26:06,377 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-10-07 08:26:06,746 INFO impl.YarnClientImpl: Submitted application application_1759799410260_0002
+2025-10-07 08:26:06,767 INFO mapreduce.Job: The url to track the job: http://melph:8088/proxy/application_1759799410260_0002/
+2025-10-07 08:26:06,767 INFO mapreduce.Job: Running job: job_1759799410260_0002
+2025-10-07 08:26:11,856 INFO mapreduce.Job: Job job_1759799410260_0002 running in uber mode : false
+2025-10-07 08:26:11,857 INFO mapreduce.Job:  map 0% reduce 0%
+2025-10-07 08:26:28,032 INFO mapreduce.Job:  map 18% reduce 0%
+2025-10-07 08:26:33,082 INFO mapreduce.Job:  map 33% reduce 0%
+2025-10-07 08:26:47,186 INFO mapreduce.Job:  map 42% reduce 0%
+2025-10-07 08:26:48,199 INFO mapreduce.Job:  map 51% reduce 0%
+2025-10-07 08:26:52,243 INFO mapreduce.Job:  map 59% reduce 0%
+2025-10-07 08:26:53,258 INFO mapreduce.Job:  map 67% reduce 0%
+2025-10-07 08:27:06,362 INFO mapreduce.Job:  map 76% reduce 0%
+2025-10-07 08:27:08,394 INFO mapreduce.Job:  map 76% reduce 22%
+2025-10-07 08:27:09,405 INFO mapreduce.Job:  map 83% reduce 22%
+2025-10-07 08:27:13,454 INFO mapreduce.Job:  map 100% reduce 22%
+2025-10-07 08:27:14,468 INFO mapreduce.Job:  map 100% reduce 100%
+2025-10-07 08:27:14,471 INFO mapreduce.Job: Job job_1759799410260_0002 completed successfully
+2025-10-07 08:27:14,524 INFO mapreduce.Job: Counters: 55
+        File System Counters
+                FILE: Number of bytes read=37051328
+                FILE: Number of bytes written=49760074
+                FILE: Number of read operations=0
+                FILE: Number of large read operations=0
+                FILE: Number of write operations=0
+                HDFS: Number of bytes read=692066488
+                HDFS: Number of bytes written=4164080
+                HDFS: Number of read operations=23
+                HDFS: Number of large read operations=0
+                HDFS: Number of write operations=2
+                HDFS: Number of bytes read erasure-coded=0
+        Job Counters
+                Killed map tasks=1
+                Launched map tasks=6
+                Launched reduce tasks=1
+                Data-local map tasks=6
+                Total time spent by all maps in occupied slots (ms)=192248
+                Total time spent by all reduces in occupied slots (ms)=40638
+                Total time spent by all map tasks (ms)=96124
+                Total time spent by all reduce tasks (ms)=20319
+                Total vcore-milliseconds taken by all map tasks=96124
+                Total vcore-milliseconds taken by all reduce tasks=20319
+                Total megabyte-milliseconds taken by all map tasks=98430976
+                Total megabyte-milliseconds taken by all reduce tasks=20806656
+        Map-Reduce Framework
+                Map input records=3036
+                Map output records=101812901
+                Map output bytes=1096815686
+                Map output materialized bytes=11029263
+                Input split bytes=810
+                Combine input records=103585061
+                Combine output records=2517386
+                Reduce input groups=366781
+                Reduce shuffle bytes=11029263
+                Reduce input records=745226
+                Reduce output records=366781
+                Spilled Records=3262612
+                Shuffled Maps =6
+                Failed Shuffles=0
+                Merged Map outputs=6
+                GC time elapsed (ms)=614
+                CPU time spent (ms)=5342
+                Physical memory (bytes) snapshot=3190427648
+                Virtual memory (bytes) snapshot=4811280384
+                Total committed heap usage (bytes)=3439329280
+                Peak Map Physical memory (bytes)=530206720
+                Peak Map Virtual memory (bytes)=781045760
+                Peak Reduce Physical memory (bytes)=241455104
+                Peak Reduce Virtual memory (bytes)=427380736
+        Shuffle Errors
+                BAD_ID=0
+                CONNECTION=0
+                IO_ERROR=0
+                WRONG_LENGTH=0
+                WRONG_MAP=0
+                WRONG_REDUCE=0
+        File Input Format Counters
+                Bytes Read=692065678
+        File Output Format Counters
+                Bytes Written=4164080
+
+C:\hadoop\sbin>hdfs dfs -cp /gutenberg/hadoop/output_mapred/part-r-00000 /gutenberg/hadoop/output_mapred/part-r-00000_backup
+
+C:\hadoop\sbin>hdfs dfs -mv /gutenberg/hadoop/output_mapred/part-r-00000 /gutenberg/hadoop/output_mapred/part-r-00000.txt
+
+C:\hadoop\sbin>hdfs dfs -cat /gutenberg/hadoop/output_mapred/part-r-00000.txt | python "D:\##~~ University stuff\2025\abd\stat_desc.py"
+Reading MapReduce outputs: 366781it [00:00, 411792.42it/s]
+
+=== Descriptive Statistics ===
+Total Unique Keys    3.667810e+05
+Total Pairs          3.667810e+05
+Total Frequency      1.018129e+08
+Mean                 2.775850e+02
+Median               2.000000e+00
+Mode                 1.000000e+00
+Min                  1.000000e+00
+Max                  7.793510e+05
+Std                  4.686430e+03
+dtype: float64
+
+Top 10 Most Frequent Keys:
+           Key   Value
+279971    said  779351
+228106     one  725269
+361728   would  632250
+213733      mr  493494
+196844     man  441202
+72928    could  416231
+324711    time  398515
+187321    like  357623
+188653  little  352138
+343921    upon  335562
+
+C:\hadoop\sbin>hdfs dfs -cat /gutenberg/hadoop/output_mapred/part-r-00000.txt | python "D:\##~~ University stuff\2025\abd\sentiment_analysis.py"
+Reading MapReduce outputs from stdin...
+Processing lines: 366781it [00:01, 347549.26it/s]
+Analyzing sentiment: 100%|█████████████████████████████| 366781/366781 [00:14<00:00, 25503.33it/s]
+
+=== Sentiment Summary ===
+Sentiment
+Neutral     365003
+Negative       900
+Positive       878
+Name: count, dtype: int64
+
+Top 10 Positive Words:
+                  Key  Polarity
+241481        perfect       1.0
+83594    delightfully       1.0
+83564     deliciously       1.0
+312558       superbly       1.0
+184640      legendary       1.0
+195027    magnificent       1.0
+195029  magnificently       1.0
+199559      marvelous       1.0
+199561    marvelously       1.0
+200013      masterful       1.0
+
+Top 10 Negative Words:
+                  Key  Polarity
+86503   devastatingly      -1.0
+138640         grimly      -1.0
+138598           grim      -1.0
+35655         bleakly      -1.0
+163958       insanely      -1.0
+163957         insane      -1.0
+35650           bleak      -1.0
+76358           cruel      -1.0
+349282      viciously      -1.0
+349280        vicious      -1.0
+
+Sentiment analysis results saved to: sentiment_analysis_output.csv
+
+C:\hadoop\sbin>stop-all.cmd
+This script is Deprecated. Instead use stop-dfs.cmd and stop-yarn.cmd
+SUCCESS: Sent termination signal to the process with PID 13304.
+SUCCESS: Sent termination signal to the process with PID 6112.
+stopping yarn daemons
+SUCCESS: Sent termination signal to the process with PID 11564.
+SUCCESS: Sent termination signal to the process with PID 12912.
+
+INFO: No tasks running with the specified criteria.
